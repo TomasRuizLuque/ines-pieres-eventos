@@ -9,11 +9,29 @@ export default function ContactForm() {
   const [contactType, setContactType] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setStatus('submitting')
-    setTimeout(() => {
-      setStatus('success')
-    }, 1500)
+    e.preventDefault();
+    setStatus('submitting');
+    
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (res.ok) {
+        setStatus('success');
+      } else {
+        setStatus('idle');
+        alert('Hubo un error al enviar tu mensaje. Por favor, intenta de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error al enviar:', error);
+      setStatus('idle');
+      alert('Hubo un error al enviar tu mensaje. Por favor, intenta de nuevo o comunícate vía WhatsApp.');
+    }
   }
 
   return (
