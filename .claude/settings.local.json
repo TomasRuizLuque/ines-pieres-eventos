@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(file \"/c/Users/tomyr/Desktop/Proyecto Ines Pieres Eventos/public/images/ines pieres/\"*.png)",
+      "Bash(identify \"/c/Users/tomyr/Desktop/Proyecto Ines Pieres Eventos/public/images/ines pieres/\"*.png)",
+      "Bash(python3 -c ':*)",
+      "Bash(file:*)"
+    ]
+  }
+}

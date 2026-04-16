@@ -1,0 +1,117 @@
+.footer {
+  background: linear-gradient(to bottom, var(--color-primary) 0%, #151a0e 100%);
+  color: var(--color-secondary);
+  padding-top: 1.5rem;
+  width: 100vw;
+  text-align: center;
+  position: relative;
+}
+
+.plantLeft, .plantRight {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.9;
+}
+
+.plantLeft {
+  top: -3rem;
+  left: -8rem;
+  width: 35vw;
+  max-width: 350px;
+  transform: rotate(180deg);
+}
+
+.plantRight {
+  top: -8rem;
+  right: -7rem;
+  width: 35vw;
+  max-width: 350px;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+}
+
+.logoWrapper {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-secondary);
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 6rem;
+  margin-bottom: 4rem;
+}
+
+.linkItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--color-secondary);
+  transition: opacity 0.3s ease;
+  position: relative;
+}
+
+.linkItem:hover {
+  opacity: 0.7;
+}
+
+.linkItem svg {
+  width: 20px;
+  height: 20px;
+}
+
+.linkItem::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: right;
+}
+
+.linkItem:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.bottomBar {
+  background-color: rgba(0,0,0, 0.4);
+  padding: 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .links {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}

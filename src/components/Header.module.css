@@ -1,0 +1,122 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.4s ease;
+  padding: var(--spacing-sm) 0;
+}
+
+.scrolled {
+  background: transparent;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  /* Logo color is managed by the image, but we can transition scales slightly */
+  transition: all 0.3s ease;
+}
+
+.nav {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.nav a {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  color: var(--color-primary);
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.header:not(.scrolled) .nav a {
+  color: var(--color-secondary); /* Text is white on top of the hero image */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.header:not(.scrolled) .logo img {
+  /* Logo claro ya es visible sobre el fondo oscuro del hero */
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  bottom: -4px;
+  left: 0;
+  transition: width 0.3s ease;
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+.nav a.cta {
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(244, 239, 235, 0.5);
+  color: var(--color-secondary) !important;
+  text-shadow: none !important;
+  padding: 0.6rem 1.5rem;
+  border-radius: 4px;
+}
+
+.scrolled .nav a.cta {
+  background-color: rgba(61, 74, 41, 0.15);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(61, 74, 41, 0.3);
+  color: var(--color-primary) !important;
+}
+
+.nav a.cta::after {
+  display: none;
+}
+
+.nav a.cta:hover {
+  background-color: rgba(61, 74, 41, 0.3);
+}
+
+.scrolled .nav a.cta:hover {
+  background-color: rgba(61, 74, 41, 0.25);
+}
+
+@media (max-width: 768px) {
+  .nav {
+    display: none;
+  }
+}
+
+.header.overContact .nav a {
+  color: #000;
+}
+
+.header.overContact .nav a.cta {
+  color: #000 !important;
+  border-color: #000;
+  background-color: rgba(255, 255, 255, 0.15); /* Soft light frosted bg so black letters don't sink entirely on dark mode */
+}
+
+.header.overContact .nav a.cta:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}

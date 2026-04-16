@@ -1,0 +1,114 @@
+.section {
+  padding: 0;
+  background-color: var(--color-secondary); /* Same sand color */
+  position: relative;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/event-2.jpg'); /* Ambientación floral detail shot */
+  background-size: cover;
+  background-position: center;
+  opacity: 0.04;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 1200px;
+  position: relative;
+  z-index: 1; /* ensure it stays above background */
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 3/4;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.imageInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 100px 0 100px 0; /* Elegant organic shape */
+  overflow: hidden;
+  z-index: 2;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.decorativeBlock {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--color-primary);
+  border-radius: 100px 0 100px 0;
+  z-index: 1;
+}
+
+.content {
+  padding-right: var(--spacing-md);
+}
+
+.label {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 0.75rem;
+  color: var(--color-accent);
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 700;
+}
+
+.title {
+  font-size: clamp(2.5rem, 3.5vw, 4rem);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.1;
+}
+
+.body {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #4a4a4a;
+  margin-bottom: var(--spacing-sm);
+}
+
+.signature {
+  margin-top: var(--spacing-md);
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-style: italic;
+  color: var(--color-primary);
+}
+
+@media (max-width: 968px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .imageWrapper {
+    width: 80%;
+    order: 2;
+  }
+  
+  .content {
+    order: 1;
+    text-align: center;
+    padding-right: 0;
+  }
+}
