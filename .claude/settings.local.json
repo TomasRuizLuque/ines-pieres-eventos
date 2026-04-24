@@ -5,7 +5,12 @@
       "Bash(file \"/c/Users/tomyr/Desktop/Proyecto Ines Pieres Eventos/public/images/ines pieres/\"*.png)",
       "Bash(identify \"/c/Users/tomyr/Desktop/Proyecto Ines Pieres Eventos/public/images/ines pieres/\"*.png)",
       "Bash(python3 -c ':*)",
-      "Bash(file:*)"
+      "Bash(file:*)",
+      "WebSearch",
+      "WebFetch(domain:admin.galponpueyrredon.com.ar)",
+      "Bash(npx tsc *)",
+      "Bash(npx skills *)",
+      "Bash(node *)"
     ]
   }
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(request: Request) {
   try {
@@ -50,6 +51,35 @@ export async function POST(request: Request) {
         <p><strong>Links de Inspiración:</strong> ${inspiracion}</p>
         <p><strong>Mensaje Adicional:</strong> ${mensajeAdicional}</p>
       `;
+
+      // ── Guardar como presupuesto pendiente en Supabase ──
+      try {
+        await supabase.from('presupuestos').insert({
+          nombre_cliente: nombresNovios || nombreCompleto,
+          email_cliente: email,
+          telefono_cliente: telefono,
+          fecha_evento: fecha || null,
+          lugar_evento: lugar || null,
+          nombres_novios: nombresNovios || null,
+          cantidad_personas: cantidadPersonas || null,
+          ceremonia: ceremonia || null,
+          formato: formato || null,
+          estilo: estilo || null,
+          presupuesto_destinado: presupuesto || null,
+          links_inspiracion: inspiracion || null,
+          mensaje_adicional: mensajeAdicional || null,
+          origen: 'formulario_web',
+          estado: 'pendiente_cotizacion',
+          items_json: [],
+          subtotal: 0,
+          flete: 0,
+          iva: 0,
+          total: 0,
+        });
+      } catch (dbErr) {
+        console.error('Error guardando presupuesto en DB:', dbErr);
+        // No bloquear el envío del mail si falla la DB
+      }
 
     } else if (tipoCotizacion === 'proveedor') {
       const empresa = formData.get('empresa') as string;

@@ -1,0 +1,1121 @@
+.builderLayout {
+  display: flex;
+  gap: 1.5rem;
+  height: calc(100vh - 120px);
+}
+
+/* ═══ PANEL IZQUIERDO: CATÁLOGO ═══ */
+.catalogPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+/* ── Tab switcher ── */
+.tabButtons {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.tabBtn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tabBtn:hover {
+  color: #0f172a;
+}
+
+.tabBtnActive {
+  background: white;
+  color: #0f172a;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Generic items panel ── */
+.genericsPanel {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-right: 0.25rem;
+}
+
+.genericsPanel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.genericsPanel::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.genericCategory {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.genericCategoryTitle {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.genericItemList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.genericItemBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  width: 100%;
+}
+
+.genericItemBtn:hover {
+  border-color: #3b82f6;
+  background: #f8faff;
+}
+
+.genericItemBtnActive {
+  border-color: #6366f1;
+  background: #f5f3ff;
+}
+
+.genericItemName {
+  flex: 1;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.genericItemPrice {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.genericItemQtyBadge {
+  background: #6366f1;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: 99px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.catalogHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.catalogSearch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+}
+
+.catalogSearch input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background: transparent;
+}
+
+.catalogSearch input::placeholder {
+  color: #94a3b8;
+}
+
+.catalogFilters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.catalogFilters select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #334155;
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 0.9rem;
+}
+
+.catalogFilters select:focus {
+  border-color: #3b82f6;
+}
+
+.catalogGrid {
+  flex: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 0.75rem;
+  padding-right: 0.25rem;
+}
+
+.catalogGrid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.catalogGrid::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.catalogCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.catalogCard:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.catalogCardImg {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  background-color: #f1f5f9;
+}
+
+.catalogCardNoImg {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.catalogCardInfo {
+  padding: 0.6rem 0.75rem;
+}
+
+.catalogCardName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.catalogCardProvider {
+  font-size: 0.7rem;
+  color: #64748b;
+  margin: 0.15rem 0 0;
+}
+
+.catalogCardPrice {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #3b82f6;
+  margin: 0.25rem 0 0;
+}
+
+.catalogCardBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.45rem;
+  background: #0f172a;
+  color: white;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.catalogCardBtn:hover {
+  background: #1e293b;
+}
+
+/* ═══ PANEL DERECHO: PRESUPUESTO ═══ */
+.budgetPanel {
+  width: 420px;
+  min-width: 420px;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.budgetHeader {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+  overflow: auto;
+  min-height: 76px;
+  max-height: 420px;
+  position: relative;
+}
+
+.budgetHeader h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Web form info panel */
+.webFormInfo {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.webFormBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #b45309;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.webFormGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 0.75rem;
+}
+
+.webFormItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.webFormLabel {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.webFormValue {
+  font-size: 0.8rem;
+  color: #451a03;
+  font-weight: 500;
+}
+
+.webFormNote {
+  font-size: 0.75rem;
+  color: #78350f;
+  margin-top: 0.4rem;
+  line-height: 1.3;
+}
+
+.clientFields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.clientRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.clientField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.clientField label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.clientField input {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  outline: none;
+  color: #0f172a;
+}
+
+.clientField input:focus {
+  border-color: #3b82f6;
+}
+
+/* Items list */
+.budgetItems {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem 1rem;
+}
+
+.budgetItems::-webkit-scrollbar {
+  width: 5px;
+}
+
+.budgetItems::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 3px;
+}
+
+.emptyBudget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #94a3b8;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.emptyBudget p {
+  font-size: 0.85rem;
+}
+
+.budgetItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.budgetItemImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.budgetItemNoImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+
+.budgetItemNoImgGeneric {
+  background: #f5f3ff;
+}
+
+.budgetItemGeneric {
+  background: #fafafe;
+}
+
+.genDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6366f1;
+  display: block;
+}
+
+.budgetItemInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.budgetItemName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.budgetItemProvider {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.budgetItemQty {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.qtyBtn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #334155;
+  transition: all 0.15s;
+}
+
+.qtyBtn:hover {
+  background: #f1f5f9;
+}
+
+.qtyValue {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+  min-width: 20px;
+  text-align: center;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 4px;
+  transition: all 0.15s;
+  display: flex;
+}
+
+.removeBtn:hover {
+  background: #fef2f2;
+}
+
+/* Totals */
+.budgetTotals {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  overflow: auto;
+  min-height: 84px;
+  max-height: 420px;
+  position: relative;
+}
+
+.sectionResizeHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 14px;
+  margin: 0.65rem -0.25rem -0.65rem;
+  cursor: row-resize;
+  user-select: none;
+}
+
+.sectionResizeHandleTop {
+  margin: -0.35rem -0.25rem 0.35rem;
+}
+
+.sectionResizeGrip {
+  width: 46px;
+  height: 4px;
+  border-radius: 999px;
+  background: #cbd5e1;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.sectionResizeHandle:hover .sectionResizeGrip {
+  background: #94a3b8;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.totalRow span:last-child {
+  font-weight: 600;
+}
+
+.totalDivider {
+  border: none;
+  border-top: 1px dashed #cbd5e1;
+  margin: 0.25rem 0;
+}
+
+.grandTotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Actions */
+.budgetActions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.saveBtn {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+}
+
+.saveBtn:hover {
+  background: #f1f5f9;
+}
+
+.pdfBtn {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background: #0f172a;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+}
+
+.pdfBtn:hover {
+  background: #1e293b;
+}
+
+.pdfBtn:disabled,
+.saveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ═══ LIVING SELECTOR (panel izquierdo) ═══ */
+.livingSelector {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.livingSelectorBtn {
+  padding: 0.3rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: white;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.livingSelectorBtn:hover {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.livingSelectorBtnActive {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: white;
+}
+
+.livingSelectorAdd {
+  padding: 0.3rem 0.75rem;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.livingSelectorAdd:hover {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+/* ═══ LIVING SECTION en el panel de presupuesto ═══ */
+.livingSection {
+  margin-bottom: 0.75rem;
+}
+
+.livingSectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 0.35rem 0;
+  border-bottom: 2px solid #e0e7ff;
+  margin-bottom: 0.25rem;
+}
+
+.livingSectionTitle {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #4338ca;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-right: 0.1rem;
+}
+
+.sectionCollapseBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 0.2rem;
+  cursor: pointer;
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
+}
+
+.sectionCollapseChevron {
+  font-size: 0.72rem;
+  color: #6366f1;
+  flex-shrink: 0;
+}
+
+.sectionCollapseMeta {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.livingToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.toggleChip {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.12rem 0.45rem;
+  border-radius: 99px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.toggleChipOn {
+  background: #e0e7ff;
+  border-color: #6366f1;
+  color: #4338ca;
+}
+
+.toggleChipOff {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #94a3b8;
+}
+
+.toggleSelect {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.25rem;
+  border: 1px solid #c7d2fe;
+  border-radius: 4px;
+  background: white;
+  color: #4338ca;
+  outline: none;
+  cursor: pointer;
+}
+
+.deleteLivingBtn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 0.12rem;
+  border-radius: 4px;
+  display: flex;
+  margin-left: auto;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.deleteLivingBtn:hover {
+  background: #fef2f2;
+}
+
+.livingEmpty {
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  padding: 0.35rem 0;
+  font-style: italic;
+}
+
+/* ═══ TOTALS: toggle pills y comisiones ═══ */
+.totalRowToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.totalRowToggle > span:last-child {
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.totalRowBold {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.togglePill {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.togglePillOn {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.togglePillOff {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.commissionControls {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.commissionInput {
+  width: 44px;
+  padding: 0.12rem 0.25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-align: center;
+  outline: none;
+  color: #0f172a;
+}
+
+.commissionInput:focus {
+  border-color: #6366f1;
+}
+
+.modeToggleBtn {
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0.08rem 0.22rem;
+  font-size: 0.7rem;
+  color: #64748b;
+  transition: all 0.15s;
+}
+
+.modeToggleBtn:hover {
+  background: #f1f5f9;
+}
+
+.disabledValue {
+  color: #cbd5e1 !important;
+  text-decoration: line-through;
+}
+
+.gananciaRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.76rem;
+  color: #10b981;
+  font-style: italic;
+  margin-top: 0.1rem;
+}
+
+/* ═══ COLLAPSIBLE SECTIONS ═══ */
+.collapsibleToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.collapsibleToggle:hover .collapseChevron {
+  color: #4338ca;
+}
+
+.collapseChevron {
+  font-size: 0.6rem;
+  color: #94a3b8;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+  transition: color 0.15s;
+}
+
+.webFormExpandedBody {
+  margin-top: 0.5rem;
+}
+
+.webFormDivider {
+  border: none;
+  border-top: 1px solid #d97706;
+  opacity: 0.3;
+  margin: 0.75rem 0;
+}
+
+.clientSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.clientSummary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.clientSummaryName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.clientSummaryDate {
+  font-size: 0.75rem;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.clientFieldsBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ── Budget groups (Ceremonia / Recepción / Salón) ── */
+.budgetGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.budgetGroupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.75rem;
+  background: #1e293b;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.budgetGroupTitle {
+  opacity: 0.9;
+}
+
+.addSectionBtn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.addSectionBtn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.addSectionBtns {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.addSectionTypeBtn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.addSectionTypeBtn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.addSectionCancelBtn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+}
+
+/* Editable section name */
+.livingSectionTitleEditable {
+  cursor: pointer;
+  border-bottom: 1px dashed transparent;
+  transition: border-color 0.15s;
+}
+
+.livingSectionTitleEditable:hover {
+  border-bottom-color: #94a3b8;
+}
+
+.sectionNameInput {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0f172a;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  outline: none;
+  width: 120px;
+}
+
+/* Editable generic price */
+.genericPriceEditable {
+  font-size: 0.72rem;
+  color: #6366f1;
+  cursor: pointer;
+  border-bottom: 1px dashed #a5b4fc;
+  display: inline-block;
+}
+
+.genericPriceEditable:hover {
+  color: #4f46e5;
+}
+
+.priceEditInput {
+  font-size: 0.72rem;
+  color: #0f172a;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  padding: 0.1rem 0.3rem;
+  outline: none;
+  width: 80px;
+}

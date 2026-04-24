@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-04-24T00:00:00.000Z",
+  "title": "Design System: Inés Pieres Eventos",
+  "extensions": {
+    "colorMeta": {
+      "olive-deep":  { "role": "primary",   "displayName": "Deep Olive",   "canonical": "oklch(31% 0.065 130)", "tonalRamp": ["#1a2012","#252e19","#2f3a1f","#3d4a29","#4f6035","#6b7d4a","#8f9e6f","#b8c49a"] },
+      "olive-mid":   { "role": "primary",   "displayName": "Mid Olive",    "canonical": "oklch(43% 0.065 130)", "tonalRamp": ["#252e19","#2f3a1f","#3d4a29","#4f6035","#5a6b40","#728754","#90a571","#b3c498"] },
+      "olive-dark":  { "role": "primary",   "displayName": "Void Olive",   "canonical": "oklch(14% 0.04 130)",  "tonalRamp": ["#090d06","#0f1409","#151a0e","#1d2414","#252e19","#2f3a1f","#3d4a29","#4f6035"] },
+      "sand-warm":   { "role": "neutral",   "displayName": "Warm Sand",    "canonical": "oklch(94% 0.008 65)",  "tonalRamp": ["#7a756f","#968f89","#b5afa9","#cec8c2","#e3ddd7","#ede8e3","#f4efeb","#faf8f6"] },
+      "sand-mid":    { "role": "neutral",   "displayName": "Sand Mid",     "canonical": "oklch(90% 0.010 65)",  "tonalRamp": ["#706b65","#8c857f","#aaa39d","#c2bcb6","#d5cfc9","#e0dad4","#e8e3d6","#f2eee8"] },
+      "sand-dark":   { "role": "neutral",   "displayName": "Sand Dark",    "canonical": "oklch(87% 0.013 65)",  "tonalRamp": ["#6a6358","#857d72","#a09888","#b8ad9e","#ccc2b2","#d8cebb","#e5dac1","#f0e8d6"] },
+      "gold-earth":  { "role": "secondary", "displayName": "Earth Gold",   "canonical": "oklch(73% 0.055 75)",  "tonalRamp": ["#4a3e20","#6b5c30","#8a7742","#a49058","#b8a370","#c4b087","#d4c4a0","#e6d9c0"] },
+      "olive-mist":  { "role": "secondary", "displayName": "Olive Mist",   "canonical": "oklch(85% 0.025 130)", "tonalRamp": ["#5a6240","#72794f","#8f9e6f","#a8b388","#bac5a2","#d1dac5","#dde4d3","#ecf0e7"] },
+      "text-dark":   { "role": "neutral",   "displayName": "Near Black",   "canonical": "oklch(12% 0.003 65)",  "tonalRamp": ["#0a0a0a","#111111","#1a1a1a","#282828","#383838","#4a4a4a","#6a6a6a","#8a8a8a"] },
+      "text-mid":    { "role": "neutral",   "displayName": "Warm Gray",    "canonical": "oklch(32% 0.003 65)",  "tonalRamp": ["#1a1a1a","#282828","#383838","#4a4a4a","#5e5e5e","#747474","#929292","#b2b2b2"] },
+      "text-light":  { "role": "neutral",   "displayName": "Off White",    "canonical": "oklch(97% 0.002 65)",  "tonalRamp": ["#8a8a8a","#a4a4a4","#c0c0c0","#d8d8d8","#eaeaea","#f2f2f2","#f9f9f9","#fdfdfd"] }
+    },
+    "typographyMeta": {
+      "display":  { "displayName": "Display",  "purpose": "H1 del hero solamente. Puede ir italic para la palabra dinámica animada." },
+      "headline": { "displayName": "Headline", "purpose": "H2 de secciones principales (contacto, historia)." },
+      "title":    { "displayName": "Title",    "purpose": "H2 del carrusel. También para la firma italic de Inés en Historia." },
+      "body":     { "displayName": "Body",     "purpose": "Párrafos narrativos. Máximo 65ch de ancho." },
+      "label":    { "displayName": "Label",    "purpose": "Categorías del carrusel, indicadores de sección, texto de navegación." }
+    },
+    "shadows": [
+      { "name": "ambient-lift",     "value": "0 10px 30px rgba(0,0,0,0.1)",         "purpose": "Cards del carrusel en reposo." },
+      { "name": "portrait-shadow",  "value": "0 20px 40px rgba(0,0,0,0.1)",         "purpose": "Imagen portrait en sección Historia." },
+      { "name": "form-container",   "value": "0 10px 40px rgba(0,0,0,0.15)",        "purpose": "Caja de formulario sobre fondo olive-deep." },
+      { "name": "hover-glow-cream", "value": "0 5px 15px rgba(244,239,235,0.2)",    "purpose": "Estado hover del botón submit sobre superficie oscura." },
+      { "name": "hover-lift",       "value": "0 10px 20px rgba(0,0,0,0.2)",         "purpose": "Estado hover del CTA pill del hero." }
+    ],
+    "motion": [
+      { "name": "ease-standard",  "value": "cubic-bezier(0.4, 0, 0.2, 1)",   "purpose": "Transiciones de estado generales (nav, inputs)." },
+      { "name": "ease-expressive","value": "cubic-bezier(0.16, 1, 0.3, 1)",  "purpose": "Animaciones de entrada de texto (slideUpFade del hero)." },
+      { "name": "ease-image",     "value": "cubic-bezier(0.25, 1, 0.5, 1)",  "purpose": "Zoom de imagen en hover de cards del carrusel." },
+      { "name": "duration-fast",  "value": "0.3s",  "purpose": "Transiciones de interacción cortas (nav hover, inputs)." },
+      { "name": "duration-mid",   "value": "0.4s",  "purpose": "Transiciones de botones CTA." },
+      { "name": "duration-slow",  "value": "0.8s",  "purpose": "Zoom de imagen en carousel hover." },
+      { "name": "duration-hero",  "value": "2.5s",  "purpose": "Fade-in del contenido del hero." },
+      { "name": "duration-bg",    "value": "30s",   "purpose": "Zoom lento del fondo del hero (slowZoom)." }
+    ],
+    "breakpoints": [
+      { "name": "mobile",  "value": "600px",  "purpose": "Footer links colapsan a columna." },
+      { "name": "tablet",  "value": "768px",  "purpose": "Nav colapsa. Cards del carousel pasan a 85vw." },
+      { "name": "laptop",  "value": "968px",  "purpose": "Grid de Historia colapsa a una columna." },
+      { "name": "desktop", "value": "1024px", "purpose": "Cards del carousel pasan a 50vw." }
+    ]
+  },
+  "components": [
+    {
+      "name": "CTA Pill Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Botón principal del hero. Pill frosted glass sobre fondo fotográfico oscuro.",
+      "html": "<button class=\"ds-btn-cta\">Hablemos de tu evento</button>",
+      "css": ".ds-btn-cta { font-family: 'Lato', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; font-weight: 400; color: #f4efeb; background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); border: 1px solid rgba(244,239,235,0.5); padding: 1rem 2.5rem; border-radius: 50px; cursor: pointer; transition: background 0.4s ease, color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease; } .ds-btn-cta:hover { background: #f4efeb; color: #3d4a29; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); } .ds-btn-cta:active { transform: translateY(-1px); }"
+    },
+    {
+      "name": "Form Submit Button",
+      "kind": "button",
+      "refersTo": "button-submit",
+      "description": "Botón de envío del formulario sobre fondo olive-deep.",
+      "html": "<button class=\"ds-btn-submit\">Solicitar presupuesto</button>",
+      "css": ".ds-btn-submit { font-family: 'Lato', system-ui, sans-serif; font-size: 1rem; font-weight: 500; background-color: #f4efeb; color: #3d4a29; padding: 1.2rem 2rem; border-radius: 6px; border: none; cursor: pointer; width: 100%; transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; } .ds-btn-submit:hover { background-color: #e5dac1; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(244,239,235,0.2); } .ds-btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }"
+    },
+    {
+      "name": "Text Input (Dark Surface)",
+      "kind": "input",
+      "refersTo": null,
+      "description": "Campo de formulario sobre superficie olive-deep. Frosted glass sutil.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\">Nombre</label><input class=\"ds-input\" type=\"text\" placeholder=\"Tu nombre\" /></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 0.5rem; } .ds-label { font-family: 'Lato', system-ui, sans-serif; font-size: 0.9rem; color: rgba(244,239,235,0.8); font-weight: 400; } .ds-input { font-family: 'Lato', system-ui, sans-serif; padding: 0.8rem 1rem; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; font-size: 1rem; background-color: rgba(255,255,255,0.15); color: #ffffff; transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; } .ds-input::placeholder { color: rgba(255,255,255,0.5); } .ds-input:focus { outline: none; border-color: rgba(255,255,255,0.8); background-color: rgba(255,255,255,0.25); box-shadow: 0 0 0 3px rgba(255,255,255,0.2); }"
+    },
+    {
+      "name": "Work Card",
+      "kind": "card",
+      "refersTo": null,
+      "description": "Card del carrusel de trabajos. Imagen a full con overlay y metadata al pie.",
+      "html": "<div class=\"ds-work-card\"><div class=\"ds-work-img\" style=\"background-image:url('https://placehold.co/400x600/3d4a29/f4efeb?text=Evento')\"></div><div class=\"ds-work-overlay\"><span class=\"ds-work-type\">Casamiento</span><h3 class=\"ds-work-title\">Nombre del evento</h3></div></div>",
+      "css": ".ds-work-card { position: relative; width: 35vw; min-width: 280px; height: 55vh; min-height: 320px; border-radius: 12px; overflow: hidden; cursor: grab; box-shadow: 0 10px 30px rgba(0,0,0,0.1); flex-shrink: 0; } .ds-work-img { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.8s cubic-bezier(0.25,1,0.5,1); } .ds-work-card:hover .ds-work-img { transform: scale(1.05); } .ds-work-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(30,30,30,0.8) 0%, rgba(30,30,30,0) 50%); display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem; transition: background 0.5s ease; } .ds-work-card:hover .ds-work-overlay { background: linear-gradient(to top, rgba(30,30,30,0.95) 0%, rgba(30,30,30,0) 65%); } .ds-work-type { font-family: 'Lato', system-ui, sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; color: #c4b087; margin-bottom: 0.5rem; display: block; } .ds-work-title { font-family: 'Playfair Display', Georgia, serif; font-size: 1.8rem; color: #f4efeb; font-weight: 500; line-height: 1.2; margin: 0; }"
+    },
+    {
+      "name": "Form Box",
+      "kind": "card",
+      "refersTo": null,
+      "description": "Contenedor del formulario. Frosted glass sobre fondo olive-deep.",
+      "html": "<div class=\"ds-form-box\"><p style=\"color:#f4efeb;font-family:'Lato',sans-serif;\">Contenido del formulario aquí</p></div>",
+      "css": ".ds-form-box { background-color: rgba(255,255,255,0.1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Link de navegación con subrayado animado. Dos estados: sobre hero (claro) y sobre fondo claro (olive).",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"ds-nav-link\">Trabajos</a><a href=\"#\" class=\"ds-nav-link\">Nosotros</a><a href=\"#\" class=\"ds-nav-link ds-nav-cta\">Contacto</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 2rem; align-items: center; } .ds-nav-link { font-family: 'Lato', system-ui, sans-serif; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.12em; color: #f4efeb; text-decoration: none; position: relative; transition: color 0.3s ease; text-shadow: 0 2px 4px rgba(0,0,0,0.5); } .ds-nav-link::after { content: ''; position: absolute; width: 0; height: 1px; background: currentColor; bottom: -4px; left: 0; transition: width 0.3s ease; } .ds-nav-link:hover::after { width: 100%; } .ds-nav-cta { background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); border: 1px solid rgba(244,239,235,0.5); padding: 0.6rem 1.5rem; border-radius: 4px; text-shadow: none; } .ds-nav-cta::after { display: none; } .ds-nav-cta:hover { background: rgba(61,74,41,0.3); }"
+    },
+    {
+      "name": "Section Label",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Label de categoría o indicador de sección. Uppercase Lato con tracking amplio.",
+      "html": "<span class=\"ds-label-section\">Nuestros Trabajos</span>",
+      "css": ".ds-label-section { font-family: 'Lato', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.75rem; font-weight: 700; color: #c4b087; display: block; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Jardín Íntimo",
+    "overview": "Este sistema visual habita en el cruce entre lo orgánico y lo elegante. No es un catálogo de servicios — es un jardín que te recibe. La paleta es la de la tierra después de la lluvia: oliva profundo, arena cálida, oro apagado. La tipografía habla en dos voces: Playfair Display para los momentos que piden emoción, Lato para la claridad funcional. El movimiento es contenido, intencional — como el viento suave que mueve las flores en una ambientación real.\n\nLo que este sistema rechaza explícitamente: fondos todo blanco que parecen catálogos de productos, grillas repetitivas de fotos sin alma, cualquier tipografía que se sienta corporativa o genérica, degradados de color morado o azul de IA, stock photos de novias sonriendo genéricas, y cualquier cosa que se sienta transaccional.\n\nEl tono no es el de una empresa que ofrece servicios — es el de alguien que va a transformar el día más importante de tu vida. El diseño llega primero con emoción, después con información.",
+    "keyCharacteristics": [
+      "Paleta terrestre y botánica — oliva, arena, oro",
+      "Tipografía serif de autoridad para emocionar, sans limpia para informar",
+      "Superficies oscuras (olive-deep) y claras (sand-warm) que se alternan para crear ritmo",
+      "Sombras suaves y difusas — nada duro ni dramático",
+      "Movimiento lento y orgánico, nunca ansioso",
+      "Formas orgánicas (border-radius asimétrico) que rompen la rigidez digital"
+    ],
+    "rules": [
+      { "name": "La Regla del Oliva",    "body": "El olive-deep (#3d4a29) es el único color saturado que tiene peso real en el sistema. Cuando aparece, define. No lo diluyas con demasiado contexto — que su presencia sea un evento.", "section": "colors" },
+      { "name": "La Regla del Blanco",   "body": "#ffffff no existe en este sistema. Toda superficie blanca es sand-warm (#f4efeb). El blanco puro destruye la temperatura orgánica del jardín.", "section": "colors" },
+      { "name": "La Regla de la Firma",  "body": "El nombre Inés Pieres en la sección Historia usa Playfair Display en italic a 2rem — es el único lugar donde la tipografía opera como firma manuscrita. No replicar este tratamiento en otros contextos.", "section": "typography" },
+      { "name": "La Regla del Label",    "body": "Todo label usa Lato uppercase 0.75rem con letter-spacing 0.15em. Nunca mezclar este tratamiento con Playfair Display — los labels son funcionales, no emocionales.", "section": "typography" },
+      { "name": "La Regla Plana",        "body": "Las superficies descansan planas. Las sombras aparecen solo cuando un elemento necesita distinguirse de su fondo o responder a interacción. Un shadow-md de Tailwind con rgba(0,0,0,0.3) es prohibido.", "section": "elevation" }
+    ],
+    "dos": [
+      "Usá #f4efeb (sand-warm) como fondo base. Nunca #ffffff.",
+      "Dejá que las imágenes hablen — en el carrusel y el hero, las fotos son el contenido principal.",
+      "Usá Playfair Display solo para momentos emocionales: titulares de sección, H1 del hero, la firma de Inés.",
+      "Mantené las sombras difusas: rgba(0,0,0,0.1) con blur grande.",
+      "Usá la forma orgánica del portrait (100px 0 100px 0) para imágenes con carga emocional.",
+      "Alternár entre sand-warm (claro) y olive-deep (oscuro) entre secciones para crear ritmo.",
+      "Usá gold-earth (#c4b087) con parsimonia — solo para labels de categoría y detalles de acento."
+    ],
+    "donts": [
+      "No hagas sitios todo blancos que parezcan catálogos — este no es un catálogo, es una experiencia.",
+      "No uses grillas de fotos simétricas sin alma.",
+      "No listes servicios como ítems de menú sin lenguaje emocional.",
+      "No uses degradados morados, azules ni ningún color de IA.",
+      "No uses Inter, Roboto, ni ninguna sans genérica para los titulares.",
+      "No uses sombras oscuras tipo rgba(0,0,0,0.3) con box-shadow 0 4px 8px.",
+      "No uses glassmorphism fuera del formulario y los botones CTA sobre hero.",
+      "No coloques stock photos de novias sonriendo genéricas — solo trabajo real de Inés.",
+      "No repitas el mismo card layout en grilla — variá tamaño y recorte."
+    ]
+  }
+}
