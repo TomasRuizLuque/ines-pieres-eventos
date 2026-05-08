@@ -1,5 +1,5 @@
 .section {
-  background: linear-gradient(135deg, var(--color-secondary) 0%, #e8e3d6 100%);
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-sand-mid) 100%);
   color: var(--color-text);
   /* The global css already gives it 100vh and flex centering, we just fill it */
   width: 100%;
@@ -29,7 +29,7 @@
 
 .subtitle {
   font-size: 1.15rem;
-  color: #4a4a4a;
+  color: var(--color-text-mid);
   font-family: var(--font-sans);
   max-width: 800px;
   margin: 0 auto;

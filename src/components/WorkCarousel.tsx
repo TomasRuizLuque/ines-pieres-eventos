@@ -17,10 +17,13 @@ export default function WorkCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const [showLeftArrow, setShowLeftArrow] = useState(false)
+  const [showRightArrow, setShowRightArrow] = useState(true)
 
   const checkScroll = () => {
     if (scrollRef.current) {
-      setShowLeftArrow(scrollRef.current.scrollLeft > 10)
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
+      setShowLeftArrow(scrollLeft > 10)
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10)
     }
   }
 
@@ -104,8 +107,9 @@ export default function WorkCarousel() {
           ))}
           </div>
 
-          <button 
-            className={`${styles.carouselArrow} ${styles.arrowRight}`} 
+          {showRightArrow && (
+          <button
+            className={`${styles.carouselArrow} ${styles.arrowRight}`}
             onPointerDown={startScrollingRight}
             onPointerUp={stopScrolling}
             onPointerLeave={stopScrolling}
@@ -113,9 +117,9 @@ export default function WorkCarousel() {
           >
             <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
+          )}
         </div>
       </div>
     </section>
   )
 }
-

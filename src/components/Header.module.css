@@ -108,15 +108,17 @@
 }
 
 .header.overContact .nav a {
-  color: #000;
+  color: var(--color-secondary);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .header.overContact .nav a.cta {
-  color: #000 !important;
-  border-color: #000;
-  background-color: rgba(255, 255, 255, 0.15); /* Soft light frosted bg so black letters don't sink entirely on dark mode */
+  color: var(--color-secondary) !important;
+  text-shadow: none !important;
+  border-color: rgba(244, 239, 235, 0.5);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .header.overContact .nav a.cta:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.35);
 }

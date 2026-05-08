@@ -1,11 +1,16 @@
 :root {
   /* Colors - Ines Pieres Palette */
-  --color-primary: #3d4a29; /* Dark Olive */
-  --color-primary-light: #5a6b40;
-  --color-secondary: #f4efeb; /* Soft Warm Sand/Off-white */
+  --color-primary: #3d4a29; /* Deep Olive */
+  --color-primary-light: #5a6b40; /* Mid Olive */
+  --color-void-olive: #151a0e; /* Void Olive — footer only */
+  --color-secondary: #f4efeb; /* Warm Sand */
+  --color-sand-mid: #e8e3d6;
+  --color-sand-dark: #e5dac1;
+  --color-accent: #c4b087; /* Earth Gold */
+  --color-olive-mist: #d1dac5;
   --color-text: #1a1a1a;
+  --color-text-mid: #4a4a4a;
   --color-text-light: #f9f9f9;
-  --color-accent: #c4b087; /* Soft Gold / Earth tone */
   
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -88,4 +93,12 @@ button {
 
 .animate-fade-in {
   animation: fadeIn 1s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

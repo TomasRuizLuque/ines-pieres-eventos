@@ -7,11 +7,12 @@ export default function History() {
       <div className={styles.container}>
         <div className={styles.imageWrapper}>
           <div className={styles.imageInner}>
-            <Image 
-              src="/images/ines-profile.jpg" 
-              alt="Inés Pieres" 
-              fill 
-              style={{ objectFit: 'cover' }} 
+            <Image
+              src="/images/ines-profile.jpg"
+              alt="Inés Pieres"
+              fill
+              sizes="(max-width: 968px) 80vw, (max-width: 1200px) 50vw, 400px"
+              style={{ objectFit: 'cover' }}
             />
           </div>
           <div className={styles.decorativeBlock}></div>

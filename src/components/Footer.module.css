@@ -1,5 +1,5 @@
 .footer {
-  background: linear-gradient(to bottom, var(--color-primary) 0%, #151a0e 100%);
+  background: linear-gradient(to bottom, var(--color-primary) 0%, var(--color-void-olive) 100%);
   color: var(--color-secondary);
   padding-top: 1.5rem;
   width: 100vw;
@@ -19,6 +19,7 @@
   left: -8rem;
   width: 35vw;
   max-width: 350px;
+  height: auto;
   transform: rotate(180deg);
 }
 
@@ -27,6 +28,7 @@
   right: -7rem;
   width: 35vw;
   max-width: 350px;
+  height: auto;
 }
 
 .container {
@@ -101,7 +103,7 @@
 }
 
 .bottomBar {
-  background-color: rgba(0,0,0, 0.4);
+  background-color: rgba(0,0,0,0.4);
   padding: 1rem;
   font-family: var(--font-sans);
   font-size: 0.8rem;

@@ -4,8 +4,7 @@ import { useState } from 'react'
 import styles from './ContactForm.module.css'
 
 export default function ContactForm() {
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle')
-  // Comienza vacío para que "nada más que eso" se muestre
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [contactType, setContactType] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,13 +23,10 @@ export default function ContactForm() {
       if (res.ok) {
         setStatus('success');
       } else {
-        setStatus('idle');
-        alert('Hubo un error al enviar tu mensaje. Por favor, intenta de nuevo.');
+        setStatus('error');
       }
-    } catch (error) {
-      console.error('Error al enviar:', error);
-      setStatus('idle');
-      alert('Hubo un error al enviar tu mensaje. Por favor, intenta de nuevo o comunícate vía WhatsApp.');
+    } catch {
+      setStatus('error');
     }
   }
 
@@ -42,6 +38,13 @@ export default function ContactForm() {
           <p className={styles.subtitle}>Queremos conocer tu idea, tu estilo y lo que soñás para ese día. Completá el formulario y te vamos a contactar pronto para acompañarte en el proceso.</p>
         </div>
         
+        {status === 'error' && (
+          <div className={styles.errorMessage}>
+            <p>Hubo un error al enviar tu mensaje. Por favor, intentá de nuevo o escribinos por <a href="https://wa.me/5491154816699" target="_blank" rel="noopener noreferrer">WhatsApp</a>.</p>
+            <button type="button" onClick={() => setStatus('idle')} className={styles.errorRetryBtn}>Intentar de nuevo</button>
+          </div>
+        )}
+
         <div className={styles.formBox}>
           {status === 'success' ? (
             <div className={styles.successMessage}>

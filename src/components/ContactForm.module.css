@@ -83,7 +83,7 @@
 }
 
 .radioGroup input[type="radio"] {
-  accent-color: var(--color-primary);
+  accent-color: var(--color-accent);
   transform: scale(1.2);
 }
 
@@ -92,6 +92,7 @@
 .inputGroup input[type="tel"],
 .inputGroup input[type="date"],
 .inputGroup input[type="number"],
+.inputGroup input[type="url"],
 .inputGroup select,
 .inputGroup textarea {
   font-family: var(--font-sans);
@@ -101,7 +102,7 @@
   font-size: 1rem;
   background-color: rgba(255, 255, 255, 0.15);
   transition: all 0.3s ease;
-  color: #ffffff;
+  color: var(--color-text-light);
 }
 
 .inputGroup select {
@@ -133,6 +134,52 @@
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.errorMessage {
+  background-color: rgba(180, 60, 40, 0.2);
+  border: 1px solid rgba(255, 120, 100, 0.4);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-secondary);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.errorMessage a {
+  text-decoration: underline;
+  color: var(--color-accent);
+}
+
+.errorRetryBtn {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-secondary);
+  border: 1px solid rgba(244, 239, 235, 0.5);
+  padding: 0.5rem 1.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.errorRetryBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(244, 239, 235, 0.8);
+}
+
 .submitBtn {
   background-color: var(--color-secondary);
   color: var(--color-primary);
@@ -145,7 +192,7 @@
 }
 
 .submitBtn:hover {
-  background-color: #e5dac1; /* slightly darker cream */
+  background-color: var(--color-sand-dark);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(244, 239, 235, 0.2);
 }

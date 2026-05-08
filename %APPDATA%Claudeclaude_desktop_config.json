@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "n8n-mcp": {
+      "command": "npx",
+      "args": ["-y", "n8n-mcp"],
+      "env": {
+        "N8N_API_URL": "http://localhost:5678/api/v1",
+        "N8N_API_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDJkZTM2Yi1hNmM2LTQ3MWEtYWViYS0wMjc0ZDk5MDcwYjIiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwianRpIjoiYzk4M2ZmODAtOTNhMS00NzQzLWEyODUtNjI0MmJhNjljY2Y3IiwiaWF0IjoxNzc4MjQ3MjE4fQ.eTuzPnK_ZWsx8lkB8m9_O252vMPlleeJnLsu-GnDXeM"
+      }
+    }
+  }
+}

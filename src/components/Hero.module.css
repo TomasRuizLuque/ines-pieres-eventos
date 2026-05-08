@@ -56,7 +56,7 @@
 
 .dynamicWord {
   display: inline-block;
-  color: #d1dac5; /* Lighter olive accent */
+  color: var(--color-olive-mist);
   font-style: italic;
   font-weight: 400;
   animation: slideUpFade 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -82,7 +82,7 @@
   border: 1px solid rgba(244, 239, 235, 0.5);
   padding: 1rem 2.5rem;
   border-radius: 50px;
-  transition: all 0.4s ease;
+  transition: background 0.4s ease, color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(5px);
 }
@@ -94,6 +94,10 @@
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
+.scrollBtn:active {
+  transform: translateY(-1px);
+}
+
 @keyframes slowZoom {
   0% { transform: scale(1); }
   100% { transform: scale(1.15); }
@@ -102,4 +106,19 @@
 @keyframes slideUpFade {
   0% { opacity: 0; transform: translateY(30px); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .background {
+    animation: none;
+  }
+  .content {
+    animation: none;
+    opacity: 1;
+  }
+  .dynamicWord {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }

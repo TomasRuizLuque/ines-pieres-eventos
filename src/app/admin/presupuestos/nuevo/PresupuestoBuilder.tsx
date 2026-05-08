@@ -91,12 +91,16 @@ interface Section {
   name: string;
   group: SectionGroup;
   isLiving: boolean;
+  isBase?: boolean;
 }
 
-const DEFAULT_SECTIONS: Section[] = [
-  { id: 0, name: 'General', group: 'Salón', isLiving: false },
-  { id: 1, name: 'Living 1', group: 'Salón', isLiving: true },
-];
+const GROUP_BASE_IDS: Record<SectionGroup, number> = {
+  Ceremonia: -1,
+  Recepción: -2,
+  Salón: 0,
+};
+
+const DEFAULT_SECTIONS: Section[] = [];
 
 const SECTION_TYPES: { label: string; baseName: string; isLiving: boolean }[] = [
   { label: 'Living',           baseName: 'Living',           isLiving: true  },
@@ -230,19 +234,40 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
 
   // ── Sections system ──
   const [sections, setSections] = useState<Section[]>(() => {
+    let initialSections: Section[] = [];
     const saved = (initialData?.config_json as BudgetConfig)?.sections;
-    if (saved?.length) return saved;
-    if (!initialData?.items_json?.length) return DEFAULT_SECTIONS;
-    const maxId = Math.max(1, ...initialData.items_json.map(i => i.living ?? 1));
-    return [
-      { id: 0, name: 'General', group: 'Salón' as SectionGroup, isLiving: false },
-      ...Array.from({ length: maxId }, (_, i) => ({
-        id: i + 1,
-        name: `Living ${i + 1}`,
-        group: 'Salón' as SectionGroup,
-        isLiving: true,
-      })),
+    
+    if (saved?.length) {
+      initialSections = saved;
+    } else if (initialData?.items_json?.length) {
+      const maxId = Math.max(1, ...initialData.items_json.map(i => i.living ?? 1));
+      initialSections = [
+        { id: GROUP_BASE_IDS.Salón, name: 'General', group: 'Salón' as SectionGroup, isLiving: false },
+        ...Array.from({ length: maxId }, (_, i) => ({
+          id: i + 1,
+          name: `Living ${i + 1}`,
+          group: 'Salón' as SectionGroup,
+          isLiving: true,
+        })),
+      ];
+    }
+
+    const baseSections: Section[] = [
+      { id: GROUP_BASE_IDS.Ceremonia, name: 'General', group: 'Ceremonia', isLiving: false, isBase: true },
+      { id: GROUP_BASE_IDS.Recepción, name: 'General', group: 'Recepción', isLiving: false, isBase: true },
+      { id: GROUP_BASE_IDS.Salón, name: 'General', group: 'Salón', isLiving: false, isBase: true },
     ];
+
+    const result = [...initialSections];
+    for (const base of baseSections) {
+      const existing = result.find(s => s.id === base.id);
+      if (existing) {
+        existing.isBase = true;
+      } else {
+        result.unshift(base);
+      }
+    }
+    return result;
   });
   const [activeSectionId, setActiveSectionId] = useState(1);
   const [editingSectionId, setEditingSectionId] = useState<number | null>(null);
@@ -272,9 +297,14 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
   const [collapsedSections, setCollapsedSections] = useState<Record<number, boolean>>({});
 
   const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const [generatingPdf, setGeneratingPdf] = useState(false);
   const [budgetHeaderHeight, setBudgetHeaderHeight] = useState<number | null>(null);
   const [budgetTotalsHeight, setBudgetTotalsHeight] = useState<number | null>(null);
+  const [budgetPanelWidth, setBudgetPanelWidth] = useState(420);
+  const resizingRef = useRef(false);
+  const resizeStartXRef = useRef(0);
+  const resizeStartWidthRef = useRef(420);
 
   const currentSnapshot = useMemo(() => buildBudgetSnapshot({
     nombreCliente,
@@ -354,6 +384,30 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
     };
   }, [isDirty]);
 
+  // ── Budget panel resize ──
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      if (!resizingRef.current) return;
+      const delta = resizeStartXRef.current - e.clientX;
+      const newWidth = Math.max(320, Math.min(900, resizeStartWidthRef.current + delta));
+      setBudgetPanelWidth(newWidth);
+    };
+    const onMouseUp = () => { resizingRef.current = false; };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
+
+  const onResizeHandleMouseDown = (e: React.MouseEvent) => {
+    resizingRef.current = true;
+    resizeStartXRef.current = e.clientX;
+    resizeStartWidthRef.current = budgetPanelWidth;
+    e.preventDefault();
+  };
+
   // ── Extract filter options ──
   const proveedores = useMemo(() => {
     const set = new Set<string>();
@@ -376,7 +430,7 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
       const meta = parseMeta(item);
       const matchLinea = selectedLinea ? meta.linea === selectedLinea : true;
       const matchMueble = selectedMueble ? meta.mueble === selectedMueble : true;
-      return matchSearch && matchProv && matchCat && matchLinea && matchMueble;
+      return matchSearch && matchProv && matchCat && matchLinea && matchMueble && item.precio_costo > 0;
     });
   }, [items, searchTerm, selectedProveedor, selectedCategoria, selectedLinea, selectedMueble]);
 
@@ -671,10 +725,14 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
       });
       if (res.ok) {
         setLastSavedSnapshot(currentSnapshot);
-        router.push('/admin/presupuestos');
-        router.refresh();
+        setSaveSuccess(true);
+        setTimeout(() => {
+          router.push('/admin/presupuestos');
+          router.refresh();
+        }, 2500);
+      } else {
+        alert('Error al guardar el presupuesto');
       }
-      else alert('Error al guardar el presupuesto');
     } catch { alert('Error de conexión'); }
     finally { setSaving(false); }
   };
@@ -720,6 +778,15 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
 
   return (
     <div className={styles.builderLayout}>
+      {saveSuccess && (
+        <div className={styles.successOverlay}>
+          <div className={styles.successCard}>
+            <span className={styles.successCheck}>✓</span>
+            <span className={styles.successTitle}>Presupuesto guardado</span>
+            <span className={styles.successSub}>Redirigiendo a la lista...</span>
+          </div>
+        </div>
+      )}
       {/* ═══ LEFT: CATALOG ═══ */}
       <div className={styles.catalogPanel}>
 
@@ -735,15 +802,31 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
           >Genéricos</button>
         </div>
 
-        {/* Section selector */}
+        {/* Section selector grouped by event area */}
         <div className={styles.livingSelector}>
-          {sections.map(s => (
-            <button
-              key={s.id}
-              className={`${styles.livingSelectorBtn} ${activeSectionId === s.id ? styles.livingSelectorBtnActive : ''}`}
-              onClick={() => setActiveSectionId(s.id)}
-            >{s.name}</button>
-          ))}
+          {(['Ceremonia', 'Recepción', 'Salón'] as SectionGroup[]).map(group => {
+            const groupSections = sections.filter(s => s.group === group);
+            if (groupSections.length === 0) return null;
+            const baseSection = groupSections.find(s => s.isBase);
+            const otherSections = groupSections.filter(s => !s.isBase);
+            
+            return (
+              <div key={group} className={styles.livingSelectorGroup}>
+                <span 
+                  className={`${styles.livingSelectorGroupLabel} ${activeSectionId === baseSection?.id ? styles.livingSelectorGroupLabelActive : ''}`}
+                  onClick={() => baseSection && setActiveSectionId(baseSection.id)}
+                  style={{ cursor: 'pointer', opacity: activeSectionId === baseSection?.id ? 1 : 0.6 }}
+                >{group}</span>
+                {otherSections.map(s => (
+                  <button
+                    key={s.id}
+                    className={`${styles.livingSelectorBtn} ${activeSectionId === s.id ? styles.livingSelectorBtnActive : ''}`}
+                    onClick={() => setActiveSectionId(s.id)}
+                  >{s.name}</button>
+                ))}
+              </div>
+            );
+          })}
         </div>
 
         {activeTab === 'catalogo' ? (
@@ -830,7 +913,8 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
       </div>
 
       {/* ═══ RIGHT: BUDGET ═══ */}
-      <div className={styles.budgetPanel}>
+      <div className={styles.budgetPanel} style={{ width: `${budgetPanelWidth}px`, minWidth: `${budgetPanelWidth}px` }}>
+        <div className={styles.budgetResizeHandle} onMouseDown={onResizeHandleMouseDown} />
         <div
           ref={headerRef}
           className={styles.budgetHeader}
@@ -989,17 +1073,20 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
 
         {/* Items grouped by section and event area */}
         <div className={styles.budgetItems}>
-          {budgetItems.length === 0 && sections.every(s => budgetItems.filter(b => b.living === s.id).length === 0) ? (
-            <div className={styles.emptyBudget}>
-              <ShoppingCart size={32} />
-              <p>Agregá items del catálogo o genéricos<br/>para armar el presupuesto</p>
-            </div>
-          ) : (
-            (['Ceremonia', 'Recepción', 'Salón'] as SectionGroup[]).map(group => {
+          {(['Ceremonia', 'Recepción', 'Salón'] as SectionGroup[]).map(group => {
               const groupSections = sections.filter(s => s.group === group);
+              const baseSection = groupSections.find(s => s.isBase);
               return (
                 <div key={group} className={styles.budgetGroup}>
-                  <div className={styles.budgetGroupHeader}>
+                  <div 
+                    className={`${styles.budgetGroupHeader} ${activeSectionId === baseSection?.id ? styles.budgetGroupHeaderActive : ''}`}
+                    onClick={(e) => {
+                      // Prevent toggling if clicking the add buttons
+                      if ((e.target as HTMLElement).closest(`.${styles.addSectionBtns}`) || (e.target as HTMLElement).closest(`.${styles.addSectionBtn}`)) return;
+                      baseSection && setActiveSectionId(baseSection.id);
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <span className={styles.budgetGroupTitle}>{group}</span>
                     {addingToGroup === group ? (
                       <div className={styles.addSectionBtns}>
@@ -1017,11 +1104,17 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
 
                   {groupSections.map(section => {
                     const sectionItems = budgetItems.filter(b => b.living === section.id);
+                    
+                    // Hide empty base section if it's not active to keep UI clean
+                    if (section.isBase && sectionItems.length === 0 && activeSectionId !== section.id) {
+                      return null;
+                    }
+
                     const alfombra = getLivingAlfombra(section.id);
                     const camino = getLivingCamino(section.id);
                     const tieneAlmohadones = budgetItems.some(b => b.living === section.id && b.nombre === 'Almohadones');
                     const isCollapsed = collapsedSections[section.id];
-                    const isGeneral = section.id === GENERAL_SECTION;
+                    const isGeneral = section.isBase || section.id === 0;
 
                     return (
                       <div key={section.id} className={styles.livingSection}>
@@ -1176,8 +1269,7 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
                   })}
                 </div>
               );
-            })
-          )}
+            })}
         </div>
 
         {/* Totals */}

@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { Plus, ClipboardList, PenSquare, Globe } from 'lucide-react';
+import { Plus, ClipboardList, PenSquare, Globe, Eye } from 'lucide-react';
 import styles from './page.module.css';
 import { deletePresupuesto } from './actions';
 import DeleteButton from './DeleteButton';
@@ -101,6 +101,9 @@ export default async function PresupuestosPage() {
                   <td>{new Date(p.created_at).toLocaleDateString('es-AR')}</td>
                   <td>
                     <div className={styles.actions}>
+                      <a href={`/api/presupuestos/${p.id}/pdf?view=true`} target="_blank" rel="noopener noreferrer" className={styles.viewBtn} title="Lectura">
+                        <Eye size={16} />
+                      </a>
                       <Link href={`/admin/presupuestos/${p.id}`} className={styles.editBtn} title="Editar">
                         <PenSquare size={16} />
                       </Link>

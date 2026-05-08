@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import styles from './Header.module.css'
 
 export default function Header() {
@@ -27,11 +26,9 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Tarea 5: Ir arriba fluido al hacer clic en el logo
   const scrollToTop = (e: React.MouseEvent) => {
     e.preventDefault()
     window.scrollTo({ top: 0, behavior: 'smooth' })
-    // Si usamos Next.js router podríamos también pushear temporalmente, pero window.scrollTo es más limpio
     window.history.pushState(null, '', '/')
   }
 

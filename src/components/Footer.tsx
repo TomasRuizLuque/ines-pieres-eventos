@@ -4,8 +4,8 @@ import styles from './Footer.module.css'
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-      <img src="/images/Hojas PNG/2.png" alt="" className={styles.plantLeft} />
-      <img src="/images/Hojas PNG/2.png" alt="" className={styles.plantRight} />
+      <Image src="/images/Hojas PNG/2.png" alt="" aria-hidden="true" className={styles.plantLeft} width={350} height={700} />
+      <Image src="/images/Hojas PNG/2.png" alt="" aria-hidden="true" className={styles.plantRight} width={350} height={700} />
       
       <div className={styles.container}>
         <div className={styles.logoWrapper}>

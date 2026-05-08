@@ -23,7 +23,7 @@ export default function Hero() {
         <h1 className={styles.title}>
           Transformando tus
           <br />
-          <span className={styles.dynamicWord} key={wordIndex}>
+          <span className={styles.dynamicWord} key={wordIndex} aria-live="polite">
             {BWORDS[wordIndex]}
           </span>
         </h1>

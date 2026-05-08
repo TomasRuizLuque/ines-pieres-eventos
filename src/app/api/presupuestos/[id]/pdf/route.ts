@@ -71,11 +71,16 @@ export async function GET(
     const element = React.createElement(PresupuestoPdf, { presupuesto: presupuestoForPdf }) as any;
     const buffer = await renderToBuffer(element);
 
+    const { searchParams } = new URL(_request.url);
+    const view = searchParams.get('view');
+    const filename = `presupuesto-${presupuesto.nombre_cliente.replace(/\s+/g, '-').toLowerCase()}.pdf`;
+    const disposition = view === 'true' ? `inline; filename="${filename}"` : `attachment; filename="${filename}"`;
+
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="presupuesto-${presupuesto.nombre_cliente.replace(/\s+/g, '-').toLowerCase()}.pdf"`,
+        'Content-Disposition': disposition,
       },
     });
   } catch (err) {
