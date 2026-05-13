@@ -33,9 +33,15 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# google service account credentials
+google-credentials.json
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scratch folder
+/scratch/

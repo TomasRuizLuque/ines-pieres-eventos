@@ -2,13 +2,20 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, PenSquare, FileText, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, PenSquare, FileText, Image as ImageIcon, FileSpreadsheet } from 'lucide-react';
 import styles from './PresupuestoView.module.css';
 
-const MARKUP = 0.10;
+const MARKUP_NORMAL = 0.10;
+const MARKUP_FLORERIA = 2.0;
 const IVA_BASE_PERCENT = 0.30;
 const IVA_RATE = 0.21;
 const GALPON_NAME = 'Galpón Pueyrredón';
+
+const getMarkup = (b: BudgetLineItem) => {
+  const cat = b.categoria ? b.categoria.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "") : '';
+  if (cat === 'floreria' || b.proveedor === 'Ines Pieres') return MARKUP_FLORERIA;
+  return MARKUP_NORMAL;
+};
 
 type SectionGroup = 'Ceremonia' | 'Recepción' | 'Salón';
 
@@ -27,6 +34,7 @@ interface BudgetLineItem {
   proveedor: string;
   url_imagen: string | null;
   living: number;
+  categoria?: string;
 }
 
 interface PresupuestoRecord {
@@ -88,12 +96,15 @@ function deriveSections(pres: PresupuestoRecord): Section[] {
 const ESTADO_LABELS: Record<string, string> = {
   pendiente_cotizacion: 'Pendiente',
   borrador: 'Borrador',
+  listo_para_enviar: 'Listo para Enviar',
   enviado: 'Enviado',
   aprobado: 'Aprobado',
 };
 
 export default function PresupuestoView({ presupuesto, onEdit }: Props) {
   const [generatingPdf, setGeneratingPdf] = useState(false);
+  const [generatingExcel, setGeneratingExcel] = useState(false);
+  const [isUpdatingEstado, setIsUpdatingEstado] = useState(false);
 
   const fmtPrice = (n: number) => `$${Math.round(n).toLocaleString('es-AR')}`;
 
@@ -107,15 +118,15 @@ export default function PresupuestoView({ presupuesto, onEdit }: Props) {
   // Recalculate totals from items (more accurate than stored values)
   const subtotalCatalogo = items
     .filter(b => !isGeneric(b.id))
-    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * (1 + MARKUP), 0);
+    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * (1 + getMarkup(b)), 0);
 
   const subtotalGenericos = items
     .filter(b => isGeneric(b.id))
-    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad, 0);
+    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * (1 + getMarkup(b)), 0);
 
   const subtotalGalpon = items
     .filter(b => !isGeneric(b.id) && b.proveedor === GALPON_NAME)
-    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * (1 + MARKUP), 0);
+    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * (1 + getMarkup(b)), 0);
 
   const iva = subtotalGalpon * IVA_BASE_PERCENT * IVA_RATE;
   const ivaActivo = cfg?.ivaActivo !== false;
@@ -126,8 +137,7 @@ export default function PresupuestoView({ presupuesto, onEdit }: Props) {
   const total = presupuesto.total ?? (baseTotal + comisionSalonAmt + comisionPlannerAmt);
 
   const gananciaEstimada = items
-    .filter(b => !isGeneric(b.id))
-    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * MARKUP, 0);
+    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * getMarkup(b), 0);
 
   const hasGalpon = items.some(b => !isGeneric(b.id) && b.proveedor === GALPON_NAME);
 
@@ -150,6 +160,40 @@ export default function PresupuestoView({ presupuesto, onEdit }: Props) {
     finally { setGeneratingPdf(false); }
   };
 
+  const handleGenerateExcel = async () => {
+    setGeneratingExcel(true);
+    try {
+      const res = await fetch(`/api/presupuestos/${presupuesto.id}/excel`);
+      if (!res.ok) { alert('Error generando el Excel'); return; }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `presupuesto-${presupuesto.nombre_cliente.replace(/\s+/g, '-').toLowerCase()}.xlsx`;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch { alert('Error de conexión al generar Excel'); }
+    finally { setGeneratingExcel(false); }
+  };
+
+  const handleChangeEstado = async (newEstado: string) => {
+    setIsUpdatingEstado(true);
+    try {
+      const res = await fetch(`/api/presupuestos/${presupuesto.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: newEstado }),
+      });
+      if (!res.ok) throw new Error();
+      window.location.reload();
+    } catch {
+      alert('Error al actualizar el estado');
+    } finally {
+      setIsUpdatingEstado(false);
+    }
+  };
+
   const GROUPS: SectionGroup[] = ['Ceremonia', 'Recepción', 'Salón'];
 
   return (
@@ -159,10 +203,25 @@ export default function PresupuestoView({ presupuesto, onEdit }: Props) {
         <Link href="/admin/presupuestos" className={styles.backLink}>
           <ArrowLeft size={14} /> Lista
         </Link>
-        <span className={`${styles.estadoBadge} ${styles[estado] || styles.borrador}`}>
-          {ESTADO_LABELS[estado] || estado}
-        </span>
+        <select 
+          className={`${styles.estadoSelect} ${styles[estado] || styles.borrador}`}
+          value={estado}
+          onChange={(e) => handleChangeEstado(e.target.value)}
+          disabled={isUpdatingEstado}
+        >
+          {Object.entries(ESTADO_LABELS).map(([val, label]) => (
+            <option key={val} value={val}>{label}</option>
+          ))}
+        </select>
         <div className={styles.rightActions}>
+          <button
+            className={styles.pdfBtn}
+            onClick={handleGenerateExcel}
+            disabled={generatingExcel || items.length === 0}
+          >
+            <FileSpreadsheet size={14} />
+            {generatingExcel ? 'Generando...' : 'Armar Excel'}
+          </button>
           <button
             className={styles.pdfBtn}
             onClick={handleGeneratePdf}
@@ -222,7 +281,7 @@ export default function PresupuestoView({ presupuesto, onEdit }: Props) {
           <p className={styles.infoCardTitle}>Totales</p>
           {subtotalCatalogo > 0 && (
             <div className={styles.totalRow}>
-              <span>Muebles (con markup 10%)</span>
+              <span>Muebles (con markup)</span>
               <span>{fmtPrice(subtotalCatalogo)}</span>
             </div>
           )}
@@ -293,9 +352,7 @@ export default function PresupuestoView({ presupuesto, onEdit }: Props) {
                         <p className={styles.emptySection}>Sin ítems</p>
                       ) : (
                         sectionItems.map(item => {
-                          const subtotal = isGeneric(item.id)
-                            ? item.precio_unitario * item.cantidad
-                            : item.precio_unitario * item.cantidad * (1 + MARKUP);
+                          const subtotal = item.precio_unitario * item.cantidad * (1 + getMarkup(item));
                           return (
                             <div key={`${item.id}-${item.living}`} className={styles.itemRow}>
                               {!isGeneric(item.id) && item.url_imagen ? (

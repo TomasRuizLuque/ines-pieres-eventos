@@ -18,10 +18,11 @@ interface Props {
   items: CatalogItem[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   presupuesto: any;
+  initialEditMode?: boolean;
 }
 
-export default function PresupuestoPageClient({ items, presupuesto }: Props) {
-  const [mode, setMode] = useState<'view' | 'edit'>('view');
+export default function PresupuestoPageClient({ items, presupuesto, initialEditMode }: Props) {
+  const [mode, setMode] = useState<'view' | 'edit'>(initialEditMode ? 'edit' : 'view');
 
   if (mode === 'edit') {
     return (

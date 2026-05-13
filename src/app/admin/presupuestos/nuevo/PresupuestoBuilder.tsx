@@ -11,7 +11,15 @@ import { PRECIOS_GENERICOS } from '@/lib/pricing';
 import { LINEAS_DE_PRODUCTO, MUEBLES_DE_PRODUCTO } from '@/lib/catalog-constants';
 
 // ── Constants ──
-const MARKUP = 0.10;
+const MARKUP_NORMAL = 0.10;
+const MARKUP_FLORERIA = 2.0;
+
+const getMarkup = (b: BudgetLineItem) => {
+  const cat = b.categoria ? b.categoria.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : '';
+  if (cat === 'floreria' || b.proveedor === 'Ines Pieres') return MARKUP_FLORERIA;
+  return MARKUP_NORMAL;
+};
+
 const IVA_BASE_PERCENT = 0.30;
 const IVA_RATE = 0.21;
 const GALPON_NAME = 'Galpón Pueyrredón';
@@ -128,6 +136,7 @@ interface BudgetLineItem {
   proveedor: string;
   url_imagen: string | null;
   living: number;
+  categoria?: string;
 }
 
 interface BudgetConfig {
@@ -193,6 +202,11 @@ const buildBudgetSnapshot = (data: {
   fechaEvento: string;
   lugarEvento: string;
   cantidadPersonas: string;
+  nombresNovios: string;
+  ceremonia: string;
+  formato: string;
+  estilo: string;
+  presupuestoDestinado: string;
   budgetItems: BudgetLineItem[];
   sections: Section[];
   config: BudgetConfig;
@@ -203,6 +217,11 @@ const buildBudgetSnapshot = (data: {
   fechaEvento: data.fechaEvento,
   lugarEvento: data.lugarEvento.trim(),
   cantidadPersonas: data.cantidadPersonas,
+  nombresNovios: data.nombresNovios.trim(),
+  ceremonia: data.ceremonia.trim(),
+  formato: data.formato.trim(),
+  estilo: data.estilo.trim(),
+  presupuestoDestinado: data.presupuestoDestinado.trim(),
   budgetItems: data.budgetItems
     .map(item => ({ ...item, living: item.living ?? 1 }))
     .sort((a, b) => `${a.living}-${a.id}`.localeCompare(`${b.living}-${b.id}`)),
@@ -274,11 +293,16 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
   const [sectionEditValue, setSectionEditValue] = useState('');
   const [addingToGroup, setAddingToGroup] = useState<SectionGroup | null>(null);
   const [editingPriceKey, setEditingPriceKey] = useState<string | null>(null);
+  const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
+  const toggleGroupCollapsed = (group: string) => setCollapsedGroups(prev => ({ ...prev, [group]: !prev[group] }));
 
   // ── Budget items (backfill living for old records) ──
   const [budgetItems, setBudgetItems] = useState<BudgetLineItem[]>(() =>
     (initialData?.items_json || []).map(item => ({ ...item, living: item.living ?? 1 }))
   );
+
+  const [customGenName, setCustomGenName] = useState('');
+  const [customGenPrice, setCustomGenPrice] = useState('');
 
   // ── Config: commissions & IVA ──
   const [config, setConfig] = useState<BudgetConfig>(() =>
@@ -291,6 +315,13 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
   const [cantidadPersonas, setCantidadPersonas] = useState(
     initialData?.cantidad_personas || ''
   );
+
+  // ── Web form extra fields ──
+  const [nombresNovios, setNombresNovios] = useState(initialData?.nombres_novios || '');
+  const [ceremonia, setCeremonia] = useState(initialData?.ceremonia || '');
+  const [formato, setFormato] = useState(initialData?.formato || '');
+  const [estilo, setEstilo] = useState(initialData?.estilo || '');
+  const [presupuestoDestinado, setPresupuestoDestinado] = useState(initialData?.presupuesto_destinado || '');
 
   // ── Collapsible header sections ──
   const [clientExpanded, setClientExpanded] = useState(!initialData?.id);
@@ -313,6 +344,11 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
     fechaEvento,
     lugarEvento,
     cantidadPersonas,
+    nombresNovios,
+    ceremonia,
+    formato,
+    estilo,
+    presupuestoDestinado,
     budgetItems,
     sections,
     config,
@@ -323,6 +359,11 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
     fechaEvento,
     lugarEvento,
     cantidadPersonas,
+    nombresNovios,
+    ceremonia,
+    formato,
+    estilo,
+    presupuestoDestinado,
     budgetItems,
     sections,
     config,
@@ -616,16 +657,18 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
         proveedor: item.proveedores?.nombre || '',
         url_imagen: item.url_imagen,
         living: activeSectionId,
+        categoria: item.categorias?.nombre,
       }]);
     }
   };
 
-  const addGenericItem = (nombre: string) => {
-    const genId = makeGenId(nombre, activeSectionId);
-    const price = PRECIOS_GENERICOS[nombre as keyof typeof PRECIOS_GENERICOS];
-    if (!price) return;
+  const addGenericItem = (nombre: string, customPrice?: number) => {
+    const isCustom = customPrice !== undefined;
+    const genId = isCustom ? `custom-${Date.now()}` : makeGenId(nombre, activeSectionId);
+    const price = isCustom ? customPrice : PRECIOS_GENERICOS[nombre as keyof typeof PRECIOS_GENERICOS];
+    if (price === undefined) return;
     const existing = budgetItems.find(b => b.id === genId);
-    if (existing) {
+    if (existing && !isCustom) {
       setBudgetItems(prev => prev.map(b => b.id === genId ? { ...b, cantidad: b.cantidad + 1 } : b));
     } else {
       setBudgetItems(prev => [...prev, {
@@ -655,16 +698,16 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
 
   // ── Calculations ──
   const subtotalCatalogo = budgetItems
-    .filter(b => !isGeneric(b.id))
-    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * (1 + MARKUP), 0);
+    .filter(b => !isGeneric(b.id) && !b.id.startsWith('custom-'))
+    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * (1 + getMarkup(b)), 0);
 
   const subtotalGenericos = budgetItems
-    .filter(b => isGeneric(b.id))
-    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad, 0);
+    .filter(b => isGeneric(b.id) || b.id.startsWith('custom-'))
+    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * (1 + getMarkup(b)), 0);
 
   const subtotalGalpon = budgetItems
-    .filter(b => !isGeneric(b.id) && b.proveedor === GALPON_NAME)
-    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * (1 + MARKUP), 0);
+    .filter(b => !isGeneric(b.id) && !b.id.startsWith('custom-') && b.proveedor === GALPON_NAME)
+    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * (1 + getMarkup(b)), 0);
 
   const iva = subtotalGalpon * IVA_BASE_PERCENT * IVA_RATE;
 
@@ -683,10 +726,9 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
   const total = baseTotal + comisionSalonAmount + comisionPlannerAmount;
 
   const gananciaEstimada = budgetItems
-    .filter(b => !isGeneric(b.id))
-    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * MARKUP, 0);
+    .reduce((sum, b) => sum + b.precio_unitario * b.cantidad * getMarkup(b), 0);
 
-  const hasGalponItems = budgetItems.some(b => !isGeneric(b.id) && b.proveedor === GALPON_NAME);
+  const hasGalponItems = budgetItems.some(b => (!isGeneric(b.id) && !b.id.startsWith('custom-')) && b.proveedor === GALPON_NAME);
 
   // ── Payload builder ──
   const buildPayload = () => ({
@@ -701,6 +743,11 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
     iva: config.ivaActivo ? Math.round(iva) : 0,
     total: Math.round(total),
     cantidad_personas: cantidadPersonas,
+    nombres_novios: nombresNovios,
+    ceremonia,
+    formato,
+    estilo,
+    presupuesto_destinado: presupuestoDestinado,
     config_json: {
       ...config,
       sections,
@@ -883,6 +930,35 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
           </>
         ) : (
           <div className={styles.genericsPanel}>
+            <div className={styles.customGenericForm}>
+              <input
+                type="text"
+                placeholder="Item personalizado..."
+                value={customGenName}
+                onChange={e => setCustomGenName(e.target.value)}
+                className={styles.customGenInput}
+              />
+              <input
+                type="number"
+                placeholder="Precio ($)"
+                value={customGenPrice}
+                onChange={e => setCustomGenPrice(e.target.value)}
+                className={styles.customGenInput}
+              />
+              <button
+                className={styles.customGenBtn}
+                title="Agregar"
+                onClick={() => {
+                  if (!customGenName || !customGenPrice) return;
+                  addGenericItem(customGenName, Number(customGenPrice));
+                  setCustomGenName('');
+                  setCustomGenPrice('');
+                }}
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+
             {GENERICOS_AGRUPADOS.map(group => (
               <div key={group.categoria} className={styles.genericCategory}>
                 <h4 className={styles.genericCategoryTitle}>{group.categoria}</h4>
@@ -1013,6 +1089,36 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
                         <input placeholder="Ubicación" value={lugarEvento} onChange={e => setLugarEvento(e.target.value)} />
                       </div>
                     </div>
+                    <div className={styles.clientRow}>
+                      <div className={styles.clientField}>
+                        <label>Novios</label>
+                        <input placeholder="Ej: Tomas e Ines" value={nombresNovios} onChange={e => setNombresNovios(e.target.value)} />
+                      </div>
+                      <div className={styles.clientField}>
+                        <label>Personas</label>
+                        <input placeholder="Ej: 150" value={cantidadPersonas} onChange={e => setCantidadPersonas(e.target.value)} />
+                      </div>
+                    </div>
+                    <div className={styles.clientRow}>
+                      <div className={styles.clientField}>
+                        <label>Ceremonia</label>
+                        <input placeholder="Ej: Si" value={ceremonia} onChange={e => setCeremonia(e.target.value)} />
+                      </div>
+                      <div className={styles.clientField}>
+                        <label>Formato</label>
+                        <input placeholder="Ej: Cocktail" value={formato} onChange={e => setFormato(e.target.value)} />
+                      </div>
+                    </div>
+                    <div className={styles.clientRow}>
+                      <div className={styles.clientField}>
+                        <label>Estilo</label>
+                        <input placeholder="Ej: Vintage" value={estilo} onChange={e => setEstilo(e.target.value)} />
+                      </div>
+                      <div className={styles.clientField}>
+                        <label>Presupuesto</label>
+                        <input placeholder="Ej: +15M" value={presupuestoDestinado} onChange={e => setPresupuestoDestinado(e.target.value)} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -1057,6 +1163,36 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
                       <input placeholder="Ubicación" value={lugarEvento} onChange={e => setLugarEvento(e.target.value)} />
                     </div>
                   </div>
+                  <div className={styles.clientRow}>
+                    <div className={styles.clientField}>
+                      <label>Novios</label>
+                      <input placeholder="Ej: Tomas e Ines" value={nombresNovios} onChange={e => setNombresNovios(e.target.value)} />
+                    </div>
+                    <div className={styles.clientField}>
+                      <label>Personas</label>
+                      <input placeholder="Ej: 150" value={cantidadPersonas} onChange={e => setCantidadPersonas(e.target.value)} />
+                    </div>
+                  </div>
+                  <div className={styles.clientRow}>
+                    <div className={styles.clientField}>
+                      <label>Ceremonia</label>
+                      <input placeholder="Ej: Si" value={ceremonia} onChange={e => setCeremonia(e.target.value)} />
+                    </div>
+                    <div className={styles.clientField}>
+                      <label>Formato</label>
+                      <input placeholder="Ej: Cocktail" value={formato} onChange={e => setFormato(e.target.value)} />
+                    </div>
+                  </div>
+                  <div className={styles.clientRow}>
+                    <div className={styles.clientField}>
+                      <label>Estilo</label>
+                      <input placeholder="Ej: Vintage" value={estilo} onChange={e => setEstilo(e.target.value)} />
+                    </div>
+                    <div className={styles.clientField}>
+                      <label>Presupuesto</label>
+                      <input placeholder="Ej: +15M" value={presupuestoDestinado} onChange={e => setPresupuestoDestinado(e.target.value)} />
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -1081,12 +1217,23 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
                   <div 
                     className={`${styles.budgetGroupHeader} ${activeSectionId === baseSection?.id ? styles.budgetGroupHeaderActive : ''}`}
                     onClick={(e) => {
-                      // Prevent toggling if clicking the add buttons
-                      if ((e.target as HTMLElement).closest(`.${styles.addSectionBtns}`) || (e.target as HTMLElement).closest(`.${styles.addSectionBtn}`)) return;
+                      // Prevent toggling if clicking the add buttons or collapse button
+                      if ((e.target as HTMLElement).closest(`.${styles.addSectionBtns}`) || 
+                          (e.target as HTMLElement).closest(`.${styles.addSectionBtn}`) ||
+                          (e.target as HTMLElement).closest(`.${styles.groupCollapseBtn}`)) return;
                       baseSection && setActiveSectionId(baseSection.id);
                     }}
                     style={{ cursor: 'pointer' }}
                   >
+                    <button
+                      className={styles.groupCollapseBtn}
+                      onClick={(e) => { e.stopPropagation(); toggleGroupCollapsed(group); }}
+                      title={collapsedGroups[group] ? "Expandir grupo" : "Ocultar grupo"}
+                    >
+                      <span className={styles.sectionCollapseChevron} style={{ color: 'inherit' }}>
+                        {collapsedGroups[group] ? '▶' : '▼'}
+                      </span>
+                    </button>
                     <span className={styles.budgetGroupTitle}>{group}</span>
                     {addingToGroup === group ? (
                       <div className={styles.addSectionBtns}>
@@ -1102,7 +1249,7 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
                     )}
                   </div>
 
-                  {groupSections.map(section => {
+                  {!collapsedGroups[group] && groupSections.map(section => {
                     const sectionItems = budgetItems.filter(b => b.living === section.id);
                     
                     // Hide empty base section if it's not active to keep UI clean
@@ -1288,13 +1435,17 @@ export default function PresupuestoBuilder({ items, initialData }: PresupuestoBu
             </div>
             {subtotalCatalogo > 0 && (
               <div className={styles.totalRow}>
-                <span>Muebles (con markup 10%)</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                  <span>Muebles (con markup)</span>
+                </div>
                 <span>{fmtPrice(subtotalCatalogo)}</span>
               </div>
             )}
             {subtotalGenericos > 0 && (
               <div className={styles.totalRow}>
-                <span>Genéricos</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                  <span>Genéricos (con markup)</span>
+                </div>
                 <span>{fmtPrice(subtotalGenericos)}</span>
               </div>
             )}

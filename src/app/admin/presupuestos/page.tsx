@@ -1,9 +1,8 @@
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { Plus, ClipboardList, PenSquare, Globe, Eye } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import styles from './page.module.css';
-import { deletePresupuesto } from './actions';
-import DeleteButton from './DeleteButton';
+import PresupuestosListClient from './PresupuestosListClient';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -17,17 +16,8 @@ export default async function PresupuestosPage() {
   const list = presupuestos || [];
   const totalPresupuestos = list.length;
   const pendientesCotizacion = list.filter(p => p.estado === 'pendiente_cotizacion').length;
-  const aprobados = list.filter(p => p.estado === 'aprobado').length;
-  const borradores = list.filter(p => p.estado === 'borrador' || p.estado === 'enviado').length;
-
-  const estadoLabel: Record<string, string> = {
-    pendiente_cotizacion: 'Pendiente',
-    borrador: 'Borrador',
-    enviado: 'Enviado',
-    aprobado: 'Aprobado',
-  };
-
-  const fmtPrice = (n: number) => `$${Math.round(n).toLocaleString('es-AR')}`;
+  const enProceso = list.filter(p => p.estado === 'borrador' || p.estado === 'pendiente_cotizacion').length;
+  const armados = list.filter(p => p.estado === 'listo_para_enviar' || p.estado === 'enviado' || p.estado === 'aprobado').length;
 
   return (
     <div className={styles.container}>
@@ -48,12 +38,12 @@ export default async function PresupuestosPage() {
           <div className={styles.statValue}>{pendientesCotizacion}</div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Borradores</div>
-          <div className={styles.statValue}>{borradores}</div>
+          <div className={styles.statLabel}>En Proceso</div>
+          <div className={styles.statValue}>{enProceso}</div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Aprobados</div>
-          <div className={styles.statValue}>{aprobados}</div>
+          <div className={styles.statLabel}>Armados</div>
+          <div className={styles.statValue}>{armados}</div>
         </div>
         <div className={styles.statCard}>
           <div className={styles.statLabel}>Total</div>
@@ -61,69 +51,7 @@ export default async function PresupuestosPage() {
         </div>
       </div>
 
-      {list.length > 0 ? (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Fecha evento</th>
-              <th>Ítems</th>
-              <th>Total</th>
-              <th>Estado</th>
-              <th>Creado</th>
-              <th style={{ textAlign: 'right' }}>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {list.map(p => {
-              const deleteAction = deletePresupuesto.bind(null, p.id);
-              
-              return (
-                <tr key={p.id} className={p.estado === 'pendiente_cotizacion' ? styles.rowPendiente : ''}>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <strong>{p.nombre_cliente}</strong>
-                      {p.origen === 'formulario_web' && (
-                        <span title="Desde formulario web" style={{ display: 'flex', alignItems: 'center' }}>
-                          <Globe size={13} color="#f59e0b" />
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td>{p.fecha_evento || '—'}</td>
-                  <td>{Array.isArray(p.items_json) ? p.items_json.length : 0} muebles</td>
-                  <td><strong>{p.total > 0 ? fmtPrice(p.total) : '—'}</strong></td>
-                  <td>
-                    <span className={`${styles.estadoBadge} ${styles[p.estado] || ''}`}>
-                      {estadoLabel[p.estado] || p.estado}
-                    </span>
-                  </td>
-                  <td>{new Date(p.created_at).toLocaleDateString('es-AR')}</td>
-                  <td>
-                    <div className={styles.actions}>
-                      <a href={`/api/presupuestos/${p.id}/pdf?view=true`} target="_blank" rel="noopener noreferrer" className={styles.viewBtn} title="Lectura">
-                        <Eye size={16} />
-                      </a>
-                      <Link href={`/admin/presupuestos/${p.id}`} className={styles.editBtn} title="Editar">
-                        <PenSquare size={16} />
-                      </Link>
-                      <form action={deleteAction}>
-                        <DeleteButton />
-                      </form>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      ) : (
-        <div className={styles.emptyState}>
-          <ClipboardList size={48} />
-          <h3>Sin presupuestos todavía</h3>
-          <p>Creá tu primer presupuesto tocando el botón &quot;Nuevo Presupuesto&quot;.</p>
-        </div>
-      )}
+      <PresupuestosListClient presupuestos={list} />
     </div>
   );
 }

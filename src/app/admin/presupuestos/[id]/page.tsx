@@ -5,9 +5,14 @@ import { notFound } from 'next/navigation';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default async function EditarPresupuestoPage(props: { params: Promise<{ id: string }> }) {
+export default async function EditarPresupuestoPage(props: { 
+  params: Promise<{ id: string }>,
+  searchParams: Promise<{ edit?: string }>
+}) {
   const params = await props.params;
+  const searchParams = await props.searchParams;
   const { id } = params;
+  const isEdit = searchParams.edit === 'true';
 
   const [{ data: items }, { data: presupuesto, error }] = await Promise.all([
     supabase
@@ -29,6 +34,7 @@ export default async function EditarPresupuestoPage(props: { params: Promise<{ i
     <PresupuestoPageClient
       items={items || []}
       presupuesto={presupuesto}
+      initialEditMode={isEdit}
     />
   );
 }

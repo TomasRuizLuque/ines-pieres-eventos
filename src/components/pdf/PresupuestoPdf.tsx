@@ -126,7 +126,17 @@ interface BudgetItem {
   proveedor: string;
   url_imagen: string | null;
   living?: number;
+  categoria?: string;
 }
+
+const MARKUP_NORMAL = 0.10;
+const MARKUP_FLORERIA = 2.0;
+
+const getMarkup = (item: BudgetItem) => {
+  const cat = (item.categoria ?? '').toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  if (cat === 'floreria' || item.proveedor === 'Ines Pieres') return MARKUP_FLORERIA;
+  return MARKUP_NORMAL;
+};
 
 interface BudgetConfig {
   ivaActivo?: boolean;
@@ -181,8 +191,8 @@ export function PresupuestoPdf({ presupuesto }: { presupuesto: Presupuesto }) {
   const multiLiving = livingNumbers.length > 1;
 
   // Recalculate subtotals for breakdown display
-  const subtotalCatalogo = catalogItems.reduce((s, i) => s + i.precio_unitario * i.cantidad * 1.1, 0);
-  const subtotalGenericos = genericItems.reduce((s, i) => s + i.precio_unitario * i.cantidad, 0);
+  const subtotalCatalogo = catalogItems.reduce((s, i) => s + i.precio_unitario * i.cantidad * (1 + getMarkup(i)), 0);
+  const subtotalGenericos = genericItems.reduce((s, i) => s + i.precio_unitario * i.cantidad * (1 + getMarkup(i)), 0);
 
   // Config with defaults
   const cfg = presupuesto.config_json ?? {};
